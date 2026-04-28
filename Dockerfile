@@ -3,7 +3,9 @@ FROM php:8.5-cli
 RUN apt-get update && apt-get install -y \
     git curl zip unzip libzip-dev libicu-dev libonig-dev libxml2-dev \
     nodejs npm \
-    && docker-php-ext-install intl zip pdo pdo_mysql mbstring xml bcmath
+    && docker-php-ext-install intl zip pdo pdo_mysql mbstring xml bcmath \
+    && pecl install redis \
+    && docker-php-ext-enable redis
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
