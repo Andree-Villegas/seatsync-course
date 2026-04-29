@@ -14,6 +14,7 @@ class ScreeningSeeder extends Seeder
      */
     public function run(): void
     {
+	Screening::query()->delete();
         $movies = Movie::all();
         $theaters = Theater::all();
 
