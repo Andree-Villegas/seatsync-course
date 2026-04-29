@@ -1,33 +1,27 @@
 <?php
-
 namespace Database\Seeders;
-
 use App\Models\Movie;
 use App\Models\Screening;
 use App\Models\Theater;
 use Illuminate\Database\Seeder;
-use App\Models\Reservation;
-use App\Models\SeatHold;
 use Illuminate\Support\Facades\DB;
 
 class ScreeningSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-	DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-    	SeatHold::query()->delete();
-    	Reservation::query()->delete();
-    	Screening::query()->delete();
-   	 DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        DB::table('seat_holds')->truncate();
+        DB::table('reservation_seat')->truncate();
+        DB::table('reservations')->truncate();
+        DB::table('screenings')->truncate();
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+
         $movies = Movie::all();
         $theaters = Theater::all();
-
         $baseDate = \Carbon\Carbon::parse('2027-04-29 00:00:00');
         $times = ['14:00', '17:00', '20:00'];
-        $basePrices = [1200, 1500, 1800]; // in cents
+        $basePrices = [1200, 1500, 1800];
 
         foreach ($movies as $movieIndex => $movie) {
             foreach ($theaters as $theaterIndex => $theater) {
@@ -36,20 +30,14 @@ class ScreeningSeeder extends Seeder
                         ->clone()
                         ->addDays($movieIndex + $theaterIndex)
                         ->setTimeFromTimeString($time);
-
                     $endTime = $startTime->clone()->addHours(2);
-
-                    Screening::firstOrCreate(
-                        [
-                            'movie_id' => $movie->id,
-                            'theater_id' => $theater->id,
-                            'start_time' => $startTime,
-                        ],
-                        [
-                            'end_time' => $endTime,
-                            'base_price' => $basePrices[$timeIndex] ?? 1200,
-                        ]
-                    );
+                    Screening::create([
+                        'movie_id' => $movie->id,
+                        'theater_id' => $theater->id,
+                        'start_time' => $startTime,
+                        'end_time' => $endTime,
+                        'base_price' => $basePrices[$timeIndex] ?? 1200,
+                    ]);
                 }
             }
         }
