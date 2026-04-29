@@ -62,7 +62,7 @@ class MovieSeeder extends Seeder
             $genres = $movieData['genres'];
             unset($movieData['genres']);
 
-            $movie = Movie::firstOrCreate(
+            $movie = Movie::updateOrCreate(
                 ['title' => $movieData['title']],
                 $movieData
             );
