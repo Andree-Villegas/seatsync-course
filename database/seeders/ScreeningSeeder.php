@@ -8,6 +8,7 @@ use App\Models\Theater;
 use Illuminate\Database\Seeder;
 use App\Models\Reservation;
 use App\Models\SeatHold;
+use Illuminate\Support\Facades\DB;
 
 class ScreeningSeeder extends Seeder
 {
@@ -16,9 +17,11 @@ class ScreeningSeeder extends Seeder
      */
     public function run(): void
     {
-	SeatHold::query()->delete();
+	DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+    	SeatHold::query()->delete();
     	Reservation::query()->delete();
     	Screening::query()->delete();
+   	 DB::statement('SET FOREIGN_KEY_CHECKS=1;');
         $movies = Movie::all();
         $theaters = Theater::all();
 
