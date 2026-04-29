@@ -6,6 +6,8 @@ use App\Models\Movie;
 use App\Models\Screening;
 use App\Models\Theater;
 use Illuminate\Database\Seeder;
+use App\Models\Reservation;
+use App\Models\SeatHold;
 
 class ScreeningSeeder extends Seeder
 {
@@ -14,7 +16,9 @@ class ScreeningSeeder extends Seeder
      */
     public function run(): void
     {
-	Screening::query()->delete();
+	SeatHold::query()->delete();
+    	Reservation::query()->delete();
+    	Screening::query()->delete();
         $movies = Movie::all();
         $theaters = Theater::all();
 
